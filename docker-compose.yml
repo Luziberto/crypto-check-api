@@ -1,0 +1,50 @@
+version: "3.5"
+services:
+    nginx:
+        image: nginx:alpine
+        container_name: dacxi-nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx:/etc/nginx/conf.d/
+        depends_on:
+            - php
+        networks:
+            - dacxi
+    php:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - mariadb
+        networks:
+            - dacxi
+    mariadb:
+        build:
+            context: ./docker/mariadb
+            args:
+                - http_proxy
+                - https_proxy
+                - no_proxy
+                - MARIADB_VERSION=latest
+        volumes:
+            #      - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
+            - ./docker/mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        ports:
+            - "3306:3306"
+        environment:
+            - TZ=UTC
+            - MYSQL_DATABASE=homestead
+            - MYSQL_USER=homestead
+            - MYSQL_PASSWORD=secret
+            - MYSQL_ROOT_PASSWORD=secret
+        networks:
+            - dacxi
+networks:
+    dacxi:
+        driver: bridge
