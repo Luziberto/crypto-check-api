@@ -25,6 +25,4 @@ Route::get('assets/{id}', [AssetController::class, 'getAssets']);
 
 Route::post('assets/prices', [AssetController::class, 'getAssetsPrice']);
 
-// Route::prefix('assets', function () {
-    
-// })
+Route::post('webhook/assets', [AssetController::class, 'webhook']);

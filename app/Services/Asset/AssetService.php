@@ -2,7 +2,6 @@
 
 namespace App\Services\Asset;
 
-use App\Models\Asset;
 use App\Repositories\Asset\AssetRepositoryInterface;
 
 class AssetService implements AssetServiceInterface
@@ -19,5 +18,10 @@ class AssetService implements AssetServiceInterface
         $assets = $this->assetRepository->getAssetsBySlugs($slugs);
 
         return $assets;
+    }
+
+    public function syncAssetsPrice(array $assets)
+    {
+        $this->assetRepository->syncAssetsByExternalIds($assets);
     }
 }

@@ -3,17 +3,25 @@
 namespace App\Constants;
 
 class AssetConstants {
-    const ETHEREUM = 'eth';
-    const TERRA = 'luna';
-    const BITCOIN = 'btc';
+    const ETHEREUM = 'ethereum';
+    const TERRA = 'terra';
+    const BITCOIN = 'bitcoin';
     const DACXI = 'dacxi';
-    const COSMOS = 'atom';
+    const COSMOS = 'cosmos hub';
 
-    const ASSETS_NAME = [
-        self::ETHEREUM => 'ethereum',
+    const ASSETS_SYMBOLS = [
+        self::ETHEREUM => 'eth',
         self::TERRA => 'luna',
         self::BITCOIN => 'btc',
         self::DACXI => 'dacxi',
         self::COSMOS => 'atom',
+    ];
+
+    const ASSETS_SLUG = [
+        self::ETHEREUM => 'ethereum',
+        self::TERRA => 'terra',
+        self::BITCOIN => 'bitcoin',
+        self::DACXI => 'dacxi',
+        self::COSMOS => 'cosmos hub',
     ];
 }

@@ -8,6 +8,7 @@ use App\Services\Asset\AssetService;
 use App\Services\Asset\AssetServiceInterface;
 use App\Services\CoinGecko\CoinService;
 use App\Services\CoinGecko\CoinServiceInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Model::unguard();
     }
 }

@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->string('symbol');
-            $table->decimal('price', 12, 2)->nullable();
+            $table->decimal('price', 20, 12)->nullable();
             $table->string('coin_base');
             $table->string('external_id');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

@@ -25,11 +25,16 @@ class AssetController extends Controller
         if (!$validator->passes()) {
             return response()->json($validator->errors()->messages(), 404);
         }
-
+        
         $assets = request()->input('assets');
+
         return response()->json(AssetResource::collection($this->assetService->getAssetsBySlugs($assets)), 200);
     }
     
+    public function webhook()
+    {
+      Logger('Entrou no Webhook ' . json_encode(request()->all()));
+    }
     // public function getList()
     // {
         

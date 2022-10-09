@@ -7,7 +7,7 @@ use App\Models\Asset;
 use App\Services\CoinGecko\CoinServiceInterface;
 use Illuminate\Console\Command;
 
-class SyncAssets extends Command
+class SyncAssetsCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -31,18 +31,19 @@ class SyncAssets extends Command
     public function handle(CoinServiceInterface $assetService)
     {
         $assets = $assetService->getList();
-
+        
         foreach ($assets as $asset) {
             Asset::updateOrCreate([
                 'symbol' => strtolower($asset['symbol']),
-                'external_id' => strtolower($asset['id'])
+                'external_id' => $asset['id']
             ], [
-                'name' => strtolower($asset['name']),
+                'name' => $asset['name'],
                 'slug' => strtolower($asset['name']),
                 'coin_base' => CoinBaseConstants::COIN_GECKO,
+                'image_path' => config('app.url').'/storage/icons/'.strtolower(str_replace(' ', '-', $asset['id'])).'.png',
             ]);
         }
 
-        $this->info('Assets synced!');
+        $this->info('All assets synced!');
     }
 }

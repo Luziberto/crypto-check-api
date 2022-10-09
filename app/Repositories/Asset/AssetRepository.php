@@ -20,14 +20,16 @@ class AssetRepository implements AssetRepositoryInterface
     public function syncAssetsByExternalIds(array $coins)
     {
         foreach ($coins as $coin) {
-            $asset = Asset::find($coin['coin_gecko_id']);
-
+            $asset = Asset::where('coin_base', $coin['coin_base'])
+                        ->where('external_id', $coin['external_id'])
+                        ->first();
+                                   
             if (!$asset) {
                 Log::error("[AssetRepository] Asset not found", ['external_id' => $coin['external_id']]);
                 continue;
             }
 
-            $asset->update(['price' => $asset['price']]);
+            $asset->update(['price' => number_format($coin['price'], 12, '.', '')]);
         }
     }
 }

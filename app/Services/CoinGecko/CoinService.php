@@ -3,6 +3,7 @@
 namespace App\Services\CoinGecko;
 
 use App\Constants\AssetConstants;
+use App\Constants\CoinBaseConstants;
 use App\Constants\CoinGeckoErrorConstants;
 use App\Constants\CoinGeckoOriginConstants;
 use App\Constants\CurrencyConstants;
@@ -16,8 +17,6 @@ use Illuminate\Support\Facades\Log;
 
 class CoinService implements CoinServiceInterface
 {
-    private $assetRepository;
-
     public function __construct(AssetRepositoryInterface $assetRepository)
     {
         $this->assetRepository = $assetRepository;
@@ -39,12 +38,10 @@ class CoinService implements CoinServiceInterface
         $data = [];
 
         foreach ($response->data as $id => $value) {
-            $data[] = ['external_id' => $id, 'price' => $value];
+            $data[] = ['external_id' => $id, 'price' => $value[CurrencyConstants::BRL], 'coin_base' => CoinBaseConstants::COIN_GECKO];
         }
-        
-        $assets = $this->assetRepository->syncAssetsByExternalIds($data);
 
-        return $assets;
+        return $data;
     }
 
     public function getList()
@@ -54,10 +51,10 @@ class CoinService implements CoinServiceInterface
         if($response->isFailure()) {
             $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_LIST_ASSETS);
         }
-
+        
         return $response->data;
     }
-
+    
     public function getAssets($id)
     {
         $response = GetSpecificAssetsRequest::get($id)->data;

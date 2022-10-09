@@ -18,7 +18,8 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'symbol' => $this->symbol,
-            'price' => $this->price
+            'price' => $this->price,
+            'image' => $this->image_path
         ];
     }
 }
