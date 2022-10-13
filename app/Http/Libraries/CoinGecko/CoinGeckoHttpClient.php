@@ -6,7 +6,8 @@ use App\Http\Libraries\HttpClientFactory;
 use App\Util\ClientResponseUtil;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Cache;
 
 class CoinGeckoHttpClient
 {
@@ -15,7 +16,7 @@ class CoinGeckoHttpClient
         array $params = [],
         array $header = []
     ): ClientResponseUtil {
-        return self::request('GET', $endpoint, null, $params, $header);
+        return self::request('get', $endpoint, null, $params, $header);
     }
 
     public static function post(
@@ -24,17 +25,17 @@ class CoinGeckoHttpClient
         array $params = [],
         array $header = []
     ): ClientResponseUtil {
-        return self::request('POST', $endpoint, $body, $params, $header);
+        return self::request('post', $endpoint, $body, $params, $header);
     }
 
     public static function put(string $endpoint, array $body): ClientResponseUtil
     {
-        return self::request('PUT', $endpoint, $body);
+        return self::request('put', $endpoint, $body);
     }
 
     public static function delete(string $endpoint): ClientResponseUtil
     {
-        return self::request('DELETE', $endpoint);
+        return self::request('delete', $endpoint);
     }
 
     public static function request(
@@ -47,8 +48,8 @@ class CoinGeckoHttpClient
         try {
             $endpoint = self::getBaseUri() . $endpoint;
             $client = HttpClientFactory::getInstance();
-            $context = self::getRequestOptions($body, $queryParams, $header);
-            $response = $client->request($method, $endpoint, $context);
+            $response = $client::withHeaders($header)->$method($endpoint, $body ?? $queryParams);
+            Cache::flush();
             return self::handleResponse($method, $endpoint, $response);
         } catch (RequestException $e) {
             Log::error($e);
@@ -59,21 +60,6 @@ class CoinGeckoHttpClient
     public static function getBaseUri()
     {
         return env('COIN_GECKO_BASE_URL');
-    }
-
-    public static function getRequestOptions(
-        $data,
-        array $queryParams,
-        array $headers = null
-    ): array {
-
-        $request = [
-            'headers' => $headers,
-            'query' => $queryParams,
-            'json' => $data ?? [],
-        ];
-
-        return $request;
     }
 
     public static function handleResponse(string $method, string $endpoint, Response $response)

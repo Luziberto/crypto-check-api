@@ -8,6 +8,7 @@ class AssetConstants {
     const BITCOIN = 'bitcoin';
     const DACXI = 'dacxi';
     const COSMOS = 'cosmos hub';
+    const DOGECOIN = 'dogecoin';
 
     const ASSETS_SYMBOLS = [
         self::ETHEREUM => 'eth',
@@ -22,6 +23,6 @@ class AssetConstants {
         self::TERRA => 'terra',
         self::BITCOIN => 'bitcoin',
         self::DACXI => 'dacxi',
-        self::COSMOS => 'cosmos hub',
+        self::COSMOS => 'cosmos hub'
     ];
 }

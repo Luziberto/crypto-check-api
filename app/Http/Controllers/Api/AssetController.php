@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AssetHistoryResource;
 use App\Services\Asset\AssetServiceInterface;
 use App\Http\Resources\AssetResource;
 use Illuminate\Support\Facades\Validator;
@@ -30,6 +31,24 @@ class AssetController extends Controller
 
         return response()->json(AssetResource::collection($this->assetService->getAssetsBySlugs($assets)), 200);
     }
+
+    public function getAssetHistory($uuid)
+    {
+        $fields = array_merge(['uuid' => $uuid], request()->all());
+
+        $validator = Validator::make($fields, [
+            'uuid' => 'required|string|exists:assets,uuid',
+            'date' => 'required|date'
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json($validator->errors()->messages(), 404);
+        }
+        $data = $this->assetService->getAssetHistory($uuid, request()->input('date'));
+        logger($data);
+        return response()->json(new AssetHistoryResource($data), 200);
+    }
+    
     
     public function webhook()
     {

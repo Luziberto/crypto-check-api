@@ -9,4 +9,6 @@ interface AssetRepositoryInterface
     public function getAssetsByExternalIds(array $externalIds);
 
     public function syncAssetsByExternalIds(array $externalIds);
+
+    public function getAssetsByUuid(string $uuid);
 }

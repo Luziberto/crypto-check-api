@@ -38,7 +38,6 @@ class UpdateAssetPriceJob implements ShouldQueue
         
         if ($assets) {
             $coins = $coinService->getSimplePrice($externalIds);
-            logger($coins);
             $assetService->syncAssetsPrice($coins);
         }
     }
