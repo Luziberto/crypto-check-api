@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AssetHistoryResource;
 use App\Services\Asset\AssetServiceInterface;
 use App\Http\Resources\AssetResource;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class AssetController extends Controller
@@ -35,10 +36,10 @@ class AssetController extends Controller
     public function getAssetHistory($uuid)
     {
         $fields = array_merge(['uuid' => $uuid], request()->all());
-
+        
         $validator = Validator::make($fields, [
             'uuid' => 'required|string|exists:assets,uuid',
-            'date' => 'required|date'
+            'date' => 'required|date_format:Y-m-d|before_or_equal:'.Carbon::now(),
         ]);
 
         if (!$validator->passes()) {
