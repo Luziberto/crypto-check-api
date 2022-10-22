@@ -59,7 +59,7 @@ class CoinGeckoHttpClient
 
     public static function getBaseUri()
     {
-        return env('COIN_GECKO_BASE_URL');
+        return env('COIN_GECKO_BASE_URL', 'https://api.coingecko.com/api/v3');
     }
 
     public static function handleResponse(string $method, string $endpoint, Response $response)
