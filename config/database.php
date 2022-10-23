@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,11 +46,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'db4free.net'),
+            'host' => env('DB_HOST', 'sql.freedb.tech'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'dacxi_asset_app'),
-            'username' => env('DB_USERNAME', 'et_bilu'),
-            'password' => env('DB_PASSWORD', 'password'),
+            'database' => env('DB_DATABASE', 'freedb_asset_app'),
+            'username' => env('DB_USERNAME', 'freedb_homestead'),
+            'password' => env('DB_PASSWORD', 'a6kgefTAvY@yK7h'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
