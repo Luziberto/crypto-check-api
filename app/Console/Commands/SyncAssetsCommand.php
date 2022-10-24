@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Constants\CoinBaseConstants;
 use App\Models\Asset;
 use App\Services\CoinGecko\CoinServiceInterface;
+use App\Services\GoogleDrive\FileServiceInterface;
 use Illuminate\Console\Command;
 
 class SyncAssetsCommand extends Command
@@ -28,11 +29,16 @@ class SyncAssetsCommand extends Command
      *
      * @return int
      */
-    public function handle(CoinServiceInterface $assetService)
+    public function handle(CoinServiceInterface $assetService, FileServiceInterface $fileService)
     {
         $assets = $assetService->getList();
         
+        $files = $fileService->list();
+        
         foreach ($assets as $asset) {
+            $name = strtolower(str_replace(' ', '-', $asset['id']));
+            $filePath = isset($files[$name]) ? $files[$name] : null;
+
             Asset::updateOrCreate([
                 'symbol' => strtolower($asset['symbol']),
                 'external_id' => $asset['id']
@@ -40,7 +46,7 @@ class SyncAssetsCommand extends Command
                 'name' => $asset['name'],
                 'slug' => strtolower($asset['name']),
                 'coin_base' => CoinBaseConstants::COIN_GECKO,
-                'image_path' => config('app.url').'/storage/icons/'.strtolower(str_replace(' ', '-', $asset['id'])).'.png',
+                'image_path' => $filePath,
             ]);
         }
 

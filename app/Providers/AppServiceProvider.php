@@ -8,6 +8,8 @@ use App\Services\Asset\AssetService;
 use App\Services\Asset\AssetServiceInterface;
 use App\Services\CoinGecko\CoinService;
 use App\Services\CoinGecko\CoinServiceInterface;
+use App\Services\GoogleDrive\FileService;
+use App\Services\GoogleDrive\FileServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CoinServiceInterface::class, CoinService::class);
         $this->app->bind(AssetServiceInterface::class, AssetService::class);
         $this->app->bind(AssetRepositoryInterface::class, AssetRepository::class);
+        $this->app->bind(FileServiceInterface::class, FileService::class);
     }
 
     /**
