@@ -11,4 +11,6 @@ interface AssetRepositoryInterface
     public function syncAssetsByExternalIds(array $externalIds);
 
     public function getAssetsByUuid(string $uuid);
+
+    public function searchAssets(string $search);
 }

@@ -55,6 +55,22 @@ class AssetController extends Controller
     {
       Logger('Entrou no Webhook ' . json_encode(request()->all()));
     }
+
+    public function searchAssets()
+    {
+        $validator = Validator::make(request()->all(), [
+            'search' => 'required|string|min:1'
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json($validator->errors()->messages(), 404);
+        }
+
+        $search = request()->input('search');
+
+        $data = $this->assetService->getAssets($search);
+        return response()->json(AssetResource::collection($data), 200); 
+    }
     // public function getList()
     // {
         

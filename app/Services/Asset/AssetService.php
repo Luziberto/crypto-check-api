@@ -38,4 +38,11 @@ class AssetService implements AssetServiceInterface
         
         return $data;
     }
+
+    public function getAssets(string $search)
+    {
+        $assets = $this->assetRepository->searchAssets($search);
+        
+        return $assets;
+    }
 }

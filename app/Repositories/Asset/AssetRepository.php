@@ -37,4 +37,12 @@ class AssetRepository implements AssetRepositoryInterface
             $asset->update(['price' => number_format($coin['price'], 12, '.', '')]);
         }
     }
+
+    public function searchAssets(string $search)
+    {
+        return Asset::when(
+            $search,
+            fn ($query) => $query->where('name', 'LIKE', "$search%")
+        )->paginate();
+    }
 }
