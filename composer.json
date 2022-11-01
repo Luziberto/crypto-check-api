@@ -11,7 +11,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
+        "spatie/laravel-short-schedule": "^1.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

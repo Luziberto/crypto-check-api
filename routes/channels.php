@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('coingecko', function ($asset) {
     return $asset;
 });
+
+// Broadcast::channel('coingecko.{assetUuid}', function ($asset) {
+//     return $asset;
+// });

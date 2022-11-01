@@ -28,9 +28,8 @@ class CoinService implements CoinServiceInterface
             'vs_currencies' => CurrencyConstants::BRL
         ];
 
-        logger($params);
         $response = GetAssetSimplePriceRequest::get($params);
-        logger($response->data);
+        
         if($response->isFailure()) {
             $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_SIMPLE_PRICE);
         }

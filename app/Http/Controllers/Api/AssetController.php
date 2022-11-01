@@ -46,7 +46,6 @@ class AssetController extends Controller
             return response()->json($validator->errors()->messages(), 404);
         }
         $data = $this->assetService->getAssetHistory($uuid, request()->input('date'));
-        logger($data);
         return response()->json(new AssetHistoryResource($data), 200);
     }
     

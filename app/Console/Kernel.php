@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Jobs\UpdateAssetPriceJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,9 +15,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new UpdateAssetPriceJob)->everyMinute();
+       
     }
 
+    protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
+    {
+        // this artisan command will run every second
+        $shortSchedule->command('sync:assets-price')->everySecond(10);
+    }
     /**
      * Register the commands for the application.
      *

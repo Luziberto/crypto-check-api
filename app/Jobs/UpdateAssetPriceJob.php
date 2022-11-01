@@ -33,7 +33,8 @@ class UpdateAssetPriceJob implements ShouldQueue
      */
     public function handle(AssetServiceInterface $assetService, AssetRepositoryInterface $assetRepository, CoinServiceInterface $coinService)
     {
-        $assets = $assetRepository->getAssetsBySlugs(AssetConstants::ASSETS_SLUG);
+        $assets = $assetRepository->getAssetsByExternalIds(AssetConstants::ASSETS_IDS);
+        
         $externalIds = $assets->pluck('external_id')->toArray();
         
         if ($assets) {
