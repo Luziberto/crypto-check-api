@@ -33,7 +33,6 @@ class AssetRepository implements AssetRepositoryInterface
                 Log::error("[AssetRepository] Asset not found", ['external_id' => $coin['external_id']]);
                 continue;
             }
-            logger('antes: '. $asset->price . ' depois: '. number_format($coin['price'], 12, '.', ''));
 
             $asset->update(['price' => number_format($coin['price'], 12, '.', '')]);
         }

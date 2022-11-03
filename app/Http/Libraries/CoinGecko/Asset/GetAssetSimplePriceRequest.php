@@ -11,7 +11,6 @@ class GetAssetSimplePriceRequest
     {
         $endpoint = '/simple/price';
         $params['cache'] = microtime();
-        logger($params['cache']);
         
         return CoinGeckoHttpClient::get($endpoint, $params);
     }
