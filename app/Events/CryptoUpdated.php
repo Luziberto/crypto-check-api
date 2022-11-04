@@ -42,7 +42,7 @@ class CryptoUpdated implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return "asset_event_".$this->asset->slug;
+        return "asset_price_update";
     }
 
     /**
