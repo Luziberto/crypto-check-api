@@ -17,7 +17,7 @@ class AssetRepository implements AssetRepositoryInterface
         return Asset::where('uuid', $uuid)->first();
     }
 
-    public function getAssetsByExternalIds(array $externalIds)
+    public function getAssetsByExternalId(array $externalIds)
     {
         return Asset::whereIn('external_id', $externalIds)->get();
     }

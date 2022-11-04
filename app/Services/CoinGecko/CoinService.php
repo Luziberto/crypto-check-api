@@ -3,13 +3,13 @@
 namespace App\Services\CoinGecko;
 
 use App\Constants\CoinBaseConstants;
-use App\Constants\CoinGeckoErrorConstants;
-use App\Constants\CoinGeckoOriginConstants;
+use App\Constants\CoingeckoConstants;
 use App\Constants\CurrencyConstants;
 use App\Exceptions\CoinGeckoHttpException;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetHistoryRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetSimplePriceRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetsListRequest;
+use App\Http\Libraries\CoinGecko\Asset\GetAssetsMarketRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetSpecificAssetsRequest;
 use App\Repositories\Asset\AssetRepositoryInterface;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +31,7 @@ class CoinService implements CoinServiceInterface
         $response = GetAssetSimplePriceRequest::get($params);
         
         if($response->isFailure()) {
-            $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_SIMPLE_PRICE);
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_SIMPLE_PRICE);
         }
 
         $data = [];
@@ -48,7 +48,24 @@ class CoinService implements CoinServiceInterface
         $response = GetAssetsListRequest::get();
 
         if($response->isFailure()) {
-            $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_LIST_ASSETS);
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_LIST_ASSETS);
+        }
+        
+        return $response->data;
+    }
+
+    public function getAssetsMarketList(array $externalIds)
+    {
+        $body = [
+            'vs_currency' => CurrencyConstants::BRL,
+            'ids' => implode(',', $externalIds),
+            'per_page' => CoingeckoConstants::MARKET_LIST_PER_PAGE
+        ];
+
+        $response = GetAssetsMarketRequest::get($body);
+
+        if($response->isFailure()) {
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);
         }
         
         return $response->data;
@@ -59,7 +76,7 @@ class CoinService implements CoinServiceInterface
         $response = GetSpecificAssetsRequest::get($id)->data;
 
         if($response->isFailure()) {
-            $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS);
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS);
         }
     }
 
@@ -68,7 +85,7 @@ class CoinService implements CoinServiceInterface
         $response = GetAssetHistoryRequest::get($id, ['date' => $date]);
         
         if($response->isFailure()) {
-            $this->handleError($response, CoinGeckoOriginConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSET_HISTORY);
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSET_HISTORY);
         }
 
         return $response->data;
@@ -77,7 +94,7 @@ class CoinService implements CoinServiceInterface
     private function handleError($response, $coinGeckoErrorOrigin)
     {
         $errorCode = $response->data['message']['codeAsString'] ?? null;
-        $errorMessage = CoinGeckoErrorConstants::getErrorMessage($errorCode);
+        $errorMessage = CoingeckoConstants::getErrorMessage($errorCode);
 
         Log::error("[$coinGeckoErrorOrigin] - " . json_encode($errorMessage));
         throw new CoinGeckoHttpException($errorMessage);

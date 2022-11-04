@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Constants\AssetConstants;
+use App\Constants\CoingeckoConstants;
 use App\Repositories\Asset\AssetRepositoryInterface;
 use App\Services\Asset\AssetServiceInterface;
 use App\Services\CoinGecko\CoinServiceInterface;
@@ -33,7 +33,7 @@ class UpdateAssetPriceJob implements ShouldQueue
      */
     public function handle(AssetServiceInterface $assetService, AssetRepositoryInterface $assetRepository, CoinServiceInterface $coinService)
     {
-        $assets = $assetRepository->getAssetsBySlugs(AssetConstants::ASSETS_SLUG);
+        $assets = $assetRepository->getAssetsByExternalId(CoingeckoConstants::ASSETS_COIN_GECKO_ID);
         
         $externalIds = $assets->pluck('external_id')->toArray();
         

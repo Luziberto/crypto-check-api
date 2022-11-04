@@ -11,4 +11,6 @@ interface CoinServiceInterface
     public function getSimplePrice(array $externalIds);
 
     public function getAssetHistory($id, $params);
+
+    public function getAssetsMarketList(array $assets);
 }

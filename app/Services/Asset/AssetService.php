@@ -2,6 +2,7 @@
 
 namespace App\Services\Asset;
 
+use App\Constants\CoingeckoConstants;
 use App\Repositories\Asset\AssetRepositoryInterface;
 use App\Services\CoinGecko\CoinServiceInterface;
 use Carbon\Carbon;
@@ -42,6 +43,19 @@ class AssetService implements AssetServiceInterface
     public function getAssets(string $search)
     {
         $assets = $this->assetRepository->searchAssets($search);
+        
+        return $assets;
+    }
+
+    public function getAssetsMarketList(array $externalIds)
+    {
+        $max = count($externalIds) / CoingeckoConstants::MARKET_LIST_PER_PAGE;
+        $slot = [];
+        for ($index=0; $index <= $max; $index++) { 
+            $slot = array_slice($externalIds, ($index * CoingeckoConstants::MARKET_LIST_PER_PAGE), ($index + 1) * CoingeckoConstants::MARKET_LIST_PER_PAGE);
+        }
+
+        $assets = $this->coinService->getAssetsMarketList($slot);
         
         return $assets;
     }
