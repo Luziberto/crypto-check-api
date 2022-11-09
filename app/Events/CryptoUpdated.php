@@ -2,9 +2,9 @@
 
 namespace App\Events;
 
+use App\Http\Resources\AssetResource;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -52,6 +52,6 @@ class CryptoUpdated implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['asset' => $this->asset];
+        return ['asset' => new AssetResource($this->asset)];
     }
 }
