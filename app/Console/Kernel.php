@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
     protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
     {
         // this artisan command will run every second
-        $shortSchedule->command('sync:assets-price')->everySecond(10);
+        $shortSchedule->command('sync:assets-price')->everySecond(config('coingecko.sync_time'));
     }
     /**
      * Register the commands for the application.

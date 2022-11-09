@@ -32,7 +32,7 @@ class CryptoUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('coingecko');
+        return new Channel('coin.'.$this->asset->slug);
     }
 
     /**

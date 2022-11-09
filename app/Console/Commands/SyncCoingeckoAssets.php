@@ -39,7 +39,7 @@ class SyncCoingeckoAssets extends Command
                 'external_id' => $asset['id']
             ], [
                 'name' => $asset['name'],
-                'slug' => strtolower($asset['name']),
+                'slug' => strtolower(str_replace(' ', '-', strtolower($asset['name']))),
                 'coin_base' => CoinBaseConstants::COIN_GECKO,
                 'image_path' => $asset['image'],
                 'price_change_percentage_24h' => $asset['price_change_percentage_24h'],
