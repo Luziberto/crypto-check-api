@@ -16,8 +16,16 @@ class AssetHistoryResource extends JsonResource
                 'small' => $this['image']['small']
             ],
             'market_data' => [
-                'price' => $this['market_data']['current_price'][CurrencyConstants::BRL],
-                'total_volume' => $this['market_data']['total_volume'][CurrencyConstants::BRL]
+                [
+                    'price' => $this['market_data']['current_price'][CurrencyConstants::BRL],
+                    'total_volume' => $this['market_data']['total_volume'][CurrencyConstants::BRL],
+                    'fiat' => strToUpper(CurrencyConstants::BRL)
+                ],
+                [
+                    'price' => $this['market_data']['current_price'][CurrencyConstants::USD],
+                    'total_volume' => $this['market_data']['total_volume'][CurrencyConstants::USD]  ,
+                    'fiat' => strToUpper(CurrencyConstants::USD)
+                ]
             ],
         ];
     }

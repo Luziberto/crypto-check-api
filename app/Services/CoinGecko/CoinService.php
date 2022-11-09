@@ -25,7 +25,8 @@ class CoinService implements CoinServiceInterface
     {
         $params = [
             'ids' => implode(',', $externalIds), 
-            'vs_currencies' => CurrencyConstants::BRL
+            'vs_currencies' => CurrencyConstants::BRL.','.CurrencyConstants::USD,
+            'include_24hr_change' => 'true'
         ];
 
         $response = GetAssetSimplePriceRequest::get($params);
@@ -37,7 +38,13 @@ class CoinService implements CoinServiceInterface
         $data = [];
         
         foreach ($response->data as $id => $value) {
-            $data[] = ['external_id' => $id, 'price' => $value[CurrencyConstants::BRL], 'coin_base' => CoinBaseConstants::COIN_GECKO];
+            $data[] = [
+                'external_id' => $id,
+                'price_usd'                   => $value[CurrencyConstants::USD],
+                'price_brl'                   => $value[CurrencyConstants::BRL],
+                'coin_base'                   => CoinBaseConstants::COIN_GECKO,
+                'price_change_percentage_24h' => $value['brl_24h_change']
+            ];
         }
 
         return $data;

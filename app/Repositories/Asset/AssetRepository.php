@@ -34,7 +34,14 @@ class AssetRepository implements AssetRepositoryInterface
                 continue;
             }
 
-            $asset->update(['price' => number_format($coin['price'], 12, '.', '')]);
+            $priceUsd = number_format($coin['price_usd'], 12, '.', '');
+            $priceBrl = number_format($coin['price_brl'], 12, '.', '');
+            
+            $asset->update([
+                'price_usd' => $priceUsd,
+                'price_brl' => $priceBrl,
+                'price_change_percentage_24h' => $coin['price_change_percentage_24h']
+            ]);
         }
     }
 

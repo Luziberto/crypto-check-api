@@ -19,7 +19,8 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'symbol' => $this->symbol,
-            'price' => $this->price,
+            'price_brl' => $this->price_brl,
+            'price_usd' => $this->price_usd,
             'image' => $this->image_path,
             'price_change_percentage_24h' => $this->price_change_percentage_24h
         ];

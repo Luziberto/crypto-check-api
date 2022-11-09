@@ -20,7 +20,8 @@ class Asset extends Model
         'name',
         'slug',
         'symbol',
-        'price',
+        'price_brl',
+        'price_usd',
         'coin_base',
         'external_id',
     ];
