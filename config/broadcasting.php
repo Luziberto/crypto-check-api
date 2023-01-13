@@ -39,7 +39,7 @@ return [
             'enable_statistics' => true,
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTls' => env('APP_ENV', 'local') !== 'production',
+                'useTls' => env('PUSHER_USE_TLS', env('APP_ENV', 'local') === 'production'),
                 'host' => env('PUSHER_HOST', '127.0.0.1'),
                 'port' => env('PUSHER_PORT', 6001)
             ],
