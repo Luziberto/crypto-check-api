@@ -17,13 +17,13 @@ class AssetHistoryResource extends JsonResource
             ],
             'market_data' => [
                 [
-                    'price' => $this['market_data']['current_price'][CurrencyConstants::BRL],
-                    'total_volume' => $this['market_data']['total_volume'][CurrencyConstants::BRL],
+                    'price' => currencyFormat($this['market_data']['current_price'][CurrencyConstants::BRL], CurrencyConstants::PT_BR_CURRENCY),
+                    'total_volume' => currencyFormat($this['market_data']['total_volume'][CurrencyConstants::BRL], CurrencyConstants::PT_BR_CURRENCY),
                     'fiat' => strToUpper(CurrencyConstants::BRL)
                 ],
                 [
-                    'price' => $this['market_data']['current_price'][CurrencyConstants::USD],
-                    'total_volume' => $this['market_data']['total_volume'][CurrencyConstants::USD]  ,
+                    'price' => currencyFormat($this['market_data']['current_price'][CurrencyConstants::USD], CurrencyConstants::EN_US_CURRENCY),
+                    'total_volume' => currencyFormat($this['market_data']['total_volume'][CurrencyConstants::USD], CurrencyConstants::EN_US_CURRENCY),
                     'fiat' => strToUpper(CurrencyConstants::USD)
                 ]
             ],

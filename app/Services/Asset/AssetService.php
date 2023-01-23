@@ -10,6 +10,7 @@ use Carbon\Carbon;
 class AssetService implements AssetServiceInterface
 {
     private $assetRepository;
+    private $coinService;
 
     public function __construct(AssetRepositoryInterface $assetRepository, CoinServiceInterface $coinService)
     {

@@ -21,28 +21,21 @@ services:
         volumes:
             - ./:/var/www
         depends_on:
-            - mariadb
+            - mysql
         networks:
             - dacxi
-    mariadb:
-        build:
-            context: ./docker/mariadb
-            args:
-                - http_proxy
-                - https_proxy
-                - no_proxy
-                - MARIADB_VERSION=latest
-        volumes:
-            #      - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
-            - ./docker/mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-        ports:
-            - "3306:3306"
+    mysql:
+        image: mysql:latest
+        restart: unless-stopped
+        tty: true
         environment:
             - TZ=UTC
             - MYSQL_DATABASE=homestead
             - MYSQL_USER=homestead
             - MYSQL_PASSWORD=secret
             - MYSQL_ROOT_PASSWORD=secret
+        ports:
+            - "3306:3306"
         networks:
             - dacxi
 networks:
