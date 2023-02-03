@@ -38,7 +38,7 @@ class CoinService implements CoinServiceInterface
         }
 
         $data = [];
-        
+
         foreach ($response->data as $id => $value) {
             $data[] = [
                 'external_id' => $id,
@@ -50,17 +50,6 @@ class CoinService implements CoinServiceInterface
         }
 
         return $data;
-    }
-
-    public function getList()
-    {
-        $response = GetAssetsListRequest::get();
-
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_LIST_ASSETS);
-        }
-        
-        return $response->data;
     }
 
     public function getAssetsMarketList(?array $externalIds = [], ?int $page = 1, ?string $order = 'market_cap_desc')
@@ -80,15 +69,6 @@ class CoinService implements CoinServiceInterface
         }
         
         return $response->data;
-    }
-    
-    public function getAssets($id)
-    {
-        $response = GetSpecificAssetsRequest::get($id)->data;
-
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS);
-        }
     }
 
     public function getAssetHistory($id, $date)

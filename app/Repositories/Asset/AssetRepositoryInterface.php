@@ -2,19 +2,18 @@
 
 namespace App\Repositories\Asset;
 
-use Illuminate\Database\Eloquent\Collection;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 interface AssetRepositoryInterface
 {
-    public function getAssetsBySlugs(array $slugs);
+    public function getBySlugs(array $slugs);
     
-    public function getAssetsByExternalId(array $externalIds);
+    public function getByExternalId(array $externalIds);
 
-    public function syncAssetsByExternalIds(array $externalIds);
+    public function syncByExternalIds(array $externalIds);
 
     public function getAllExternalId();
 
-    public function getAssetsByUuid(string $uuid);
+    public function getByUuid(string $uuid);
 
-    public function searchAssets(string $search);
+    public function search(string $search, int $perPage, string $orderBy, string $direction): LengthAwarePaginator;
 }

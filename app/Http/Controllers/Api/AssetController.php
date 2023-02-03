@@ -7,37 +7,26 @@ use App\Http\Requests\AssetIndexRequest;
 use App\Http\Resources\AssetHistoryResource;
 use App\Http\Resources\AssetIndexCollection;
 use App\Services\Asset\AssetServiceInterface;
-use App\Http\Resources\AssetResource;
-use App\Models\Asset;
 use App\Repositories\Asset\AssetRepositoryInterface;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AssetController extends Controller
 {
     private $assetService;
-    private $assetRepository;
 
     public function __construct(AssetServiceInterface $assetService, AssetRepositoryInterface $assetRepository) {
         $this->assetService = $assetService;
-        $this->assetRepository = $assetRepository;
     }
 
-    public function index(AssetIndexRequest $request, Asset $asset)
+    public function index(AssetIndexRequest $request)
     {
-        $externalIds = $this->assetRepository->getAllExternalId()->pluck('external_id')->toArray();
-        logger($externalIds);
-        $search = $request->get('search');
-        $orderBy = $request->get('orderBy') ?? 'price_change_percentage_24h';
-        $direction = $request->get('direction') ?? 'desc';
-        $perPage = $request->get('per_page') ?? 10;
-
-        $assets = $asset
-                    ->when($search, fn (Builder $query) => $query->where(DB::raw('lower(name)'),'LIKE', "%$search%"))
-                    ->orderBy($request->get('orderBy', $orderBy), $request->get('direction', $direction))
-                    ->paginate($request->get('per_page', $perPage));
+        $assets = $this->assetService->search(
+            search: $request->get('search') ?? '',
+            perPage: $request->get('per_page') ?? '',
+            orderBy: $request->get('orderBy') ?? 'price_change_percentage_24h',
+            direction: $request->get('direction') ?? 'desc'
+        );
                     
 
         return response()->json(AssetIndexCollection::make($assets), 200);
@@ -64,45 +53,4 @@ class AssetController extends Controller
     {
       Logger('Entrou no Webhook ' . json_encode(request()->all()));
     }
-
-    public function searchAssets()
-    {
-        $validator = Validator::make(request()->all(), [
-            'search' => 'required|string|min:1'
-        ]);
-
-        if (!$validator->passes()) {
-            return response()->json($validator->errors()->messages(), 404);
-        }
-
-        $search = request()->input('search');
-
-        $data = $this->assetService->getAssets($search);
-        return response()->json(AssetResource::collection($data), 200); 
-    }
-    // public function getList()
-    // {
-        
-    //     $assets = $this->assetService->getList();
-
-    //     return response()->json($assets, 200);
-    // }
-
-
-    // public function getAssetsPrice()
-    // {
-    //     $validator = Validator::make(request()->all(), [
-    //         'externalIds' => 'required|array|min:1',
-    //         'externalIds.*' => 'required|string|exists:assets,external_id'
-    //     ]);
-
-    //     if (!$validator->passes()) {
-    //         return response()->json($validator->errors()->messages(), 404);
-    //     }
-
-    //     $externalIds = request()->input('externalIds');
-        
-    //     return response()->json($this->assetService->getSimplePrice($externalIds), 200);
-    // }
-
 }

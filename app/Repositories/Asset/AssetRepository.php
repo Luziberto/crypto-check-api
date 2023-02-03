@@ -3,37 +3,52 @@
 namespace App\Repositories\Asset;
 
 use App\Models\Asset;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AssetRepository implements AssetRepositoryInterface
 {
 
+    protected $entity;
+
+    public function __construct(Asset $asset)
+    {
+        $this->entity = $asset;
+    }
+
+    public function search(string $search, int $perPage, string $orderBy, string $direction): LengthAwarePaginator {
+        return $this->entity
+                ->when($search, fn (Builder $query) => $query->where(DB::raw('lower(name)'),'LIKE', "%$search%"))
+                ->orderBy($orderBy, $direction)
+                ->paginate($perPage);
+    }
+    
     public function getAllExternalId()
     {
-        return DB::table('assets')->select('external_id')->get();
+        return $this->entity->query()->select('external_id')->get();
     }
 
-    public function getAssetsBySlugs(array $slugs)
+    public function getBySlugs(array $slugs)
     {
-        return Asset::whereIn('slug', $slugs)->get();
+        return $this->entity->whereIn('slug', $slugs)->get();
     }
 
-    public function getAssetsByUuid(string $uuid)
+    public function getByUuid(string $uuid)
     {
-        return Asset::where('uuid', $uuid)->first();
+        return $this->entity->where('uuid', $uuid)->first();
     }
 
-    public function getAssetsByExternalId(array $externalIds)
+    public function getByExternalId(array $externalIds)
     {
-        return Asset::whereIn('external_id', $externalIds)->get();
+        return $this->entity->whereIn('external_id', $externalIds)->get();
     }
 
-    public function syncAssetsByExternalIds(array $coins)
+    public function syncByExternalIds(array $coins)
     {
         foreach ($coins as $coin) {
-            $asset = Asset::where('coin_base', $coin['coin_base'])
+            $asset = $this->entity->where('coin_base', $coin['coin_base'])
                         ->where('external_id', $coin['external_id'])
                         ->first();
                                    
@@ -51,13 +66,5 @@ class AssetRepository implements AssetRepositoryInterface
                 'price_change_percentage_24h' => $coin['price_change_percentage_24h']
             ]);
         }
-    }
-
-    public function searchAssets(string $search)
-    {
-        return Asset::when(
-            $search,
-            fn ($query) => $query->where('name', 'LIKE', "$search%")
-        )->paginate();
     }
 }
