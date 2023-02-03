@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 
 class CoinService implements CoinServiceInterface
 {
+    public $assetRepository;
+    
     public function __construct(AssetRepositoryInterface $assetRepository)
     {
         $this->assetRepository = $assetRepository;
@@ -61,12 +63,14 @@ class CoinService implements CoinServiceInterface
         return $response->data;
     }
 
-    public function getAssetsMarketList(array $externalIds)
+    public function getAssetsMarketList(?array $externalIds = [], ?int $page = 1, ?string $order = 'market_cap_desc')
     {
         $body = [
-            'vs_currency' => CurrencyConstants::BRL,
             'ids' => implode(',', $externalIds),
-            'per_page' => CoingeckoConstants::MARKET_LIST_PER_PAGE
+            'vs_currency' => CurrencyConstants::BRL,
+            'per_page' => CoingeckoConstants::MARKET_LIST_PER_PAGE,
+            'page' => $page,
+            'order' => $order
         ];
 
         $response = GetAssetsMarketRequest::get($body);

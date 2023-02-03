@@ -33,11 +33,9 @@ class UpdateAssetPriceJob implements ShouldQueue
      */
     public function handle(AssetServiceInterface $assetService, AssetRepositoryInterface $assetRepository, CoinServiceInterface $coinService)
     {
-        $assets = $assetRepository->getAssetsByExternalId(CoingeckoConstants::ASSETS_COIN_GECKO_ID);
-        
-        $externalIds = $assets->pluck('external_id')->toArray();
-        
-        if ($assets) {
+        $externalIds = $assetRepository->getAllExternalId()->pluck('external_id')->toArray();
+        logger($externalIds);
+        if (count($externalIds)) {
             $coins = $coinService->getSimplePrice($externalIds);
             $assetService->syncAssetsPrice($coins);
         }

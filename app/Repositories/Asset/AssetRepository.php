@@ -3,10 +3,18 @@
 namespace App\Repositories\Asset;
 
 use App\Models\Asset;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AssetRepository implements AssetRepositoryInterface
 {
+
+    public function getAllExternalId()
+    {
+        return DB::table('assets')->select('external_id')->get();
+    }
+
     public function getAssetsBySlugs(array $slugs)
     {
         return Asset::whereIn('slug', $slugs)->get();

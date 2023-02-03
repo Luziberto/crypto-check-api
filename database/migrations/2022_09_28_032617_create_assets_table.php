@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('price_change_percentage_24h')->nullable();
             $table->string('coin_base');
             $table->string('external_id');
-            $table->string('image_path')->nullable();
+            $table->string('image_path', 500)->nullable();
             $table->timestamps();
         });
     }

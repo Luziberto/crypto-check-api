@@ -19,12 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('assets/{uuid}/history', [AssetController::class, 'getAssetHistory']);
-Route::post('assets', [AssetController::class, 'getAssets']);
-Route::get('assets/list', [AssetController::class, 'getList']);
-Route::post('assets/search', [AssetController::class, 'searchAssets']);
-Route::get('assets/{id}', [AssetController::class, 'getAssets']);
-
-
-Route::post('assets/prices', [AssetController::class, 'getAssetsPrice']);
-
-Route::post('webhook/assets', [AssetController::class, 'webhook']);
+Route::post('assets', [AssetController::class, 'index']);
