@@ -16,6 +16,10 @@ class UpdateAssetPriceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $failOnTimeout = true;
+    public $timeout = 10;
+    public $tries = 1;
+    
     /**
      * Create a new job instance.
      *
@@ -39,7 +43,6 @@ class UpdateAssetPriceJob implements ShouldQueue
             $pages = ceil(count($externalIds)/CoingeckoConstants::SIMPLE_PRICE_PER_PAGE);
             
             for ($i=1; $i <= $pages; $i++) {
-                logger('count =>'.$i);
                 $coins = $coinService->getSimplePrice(array_slice($externalIds, ($i - 1) * CoingeckoConstants::SIMPLE_PRICE_PER_PAGE, $i * CoingeckoConstants::SIMPLE_PRICE_PER_PAGE));
                 $assetService->syncPrice($coins);
             }
