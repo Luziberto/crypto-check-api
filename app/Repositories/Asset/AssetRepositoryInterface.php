@@ -13,6 +13,8 @@ interface AssetRepositoryInterface
 
     public function getAllExternalId();
 
+    public function updateMarketChart(string $externalId, string $market, string $currency);
+
     public function getByUuid(string $uuid);
 
     public function search(string $search, int $perPage, string $orderBy, string $direction): LengthAwarePaginator;

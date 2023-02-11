@@ -49,7 +49,6 @@ class CoinGeckoHttpClient
             $endpoint = self::getBaseUri() . $endpoint;
             $client = HttpClientFactory::getInstance();
             $response = $client::withHeaders($header)->$method($endpoint, $body ?? $queryParams);
-            Cache::flush();
             return self::handleResponse($method, $endpoint, $response);
         } catch (RequestException $e) {
             Log::error($e);

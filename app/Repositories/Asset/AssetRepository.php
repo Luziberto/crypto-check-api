@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Asset;
 
+use App\Constants\CurrencyConstants;
 use App\Models\Asset;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -21,7 +22,6 @@ class AssetRepository implements AssetRepositoryInterface
     public function search(string $search, int $perPage, string $orderBy, string $direction): LengthAwarePaginator {
         return $this->entity
                 ->when($search, fn (Builder $query) => $query->where(DB::raw('lower(name)'),'LIKE', "%$search%"))
-                ->orderBy($orderBy, $direction)
                 ->paginate($perPage);
     }
     
@@ -66,5 +66,22 @@ class AssetRepository implements AssetRepositoryInterface
                 'price_change_percentage_24h' => $coin['price_change_percentage_24h']
             ]);
         }
+    }
+    
+    public function updateMarketChart(string $externalId, string $market, string $currency)
+    {
+        $asset = $this->entity->where('external_id', $externalId)
+                    ->first();
+                                
+        if (!$asset) {
+            Log::error("[AssetRepository] Asset not found", ['external_id' => $externalId]);
+            return;
+        }
+        
+        logger($market);
+        $asset->update(match ($currency) {
+            CurrencyConstants::BRL => ['market_90_days_brl' => $market],
+            CurrencyConstants::USD => ['market_90_days_usd' => $market]
+        });
     }
 }

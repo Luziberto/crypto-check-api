@@ -7,6 +7,7 @@ use App\Constants\CoingeckoConstants;
 use App\Constants\CurrencyConstants;
 use App\Exceptions\CoinGeckoHttpException;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetHistoryRequest;
+use App\Http\Libraries\CoinGecko\Asset\GetAssetMarketChartRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetSimplePriceRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetsListRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetsMarketRequest;
@@ -63,6 +64,23 @@ class CoinService implements CoinServiceInterface
         ];
 
         $response = GetAssetsMarketRequest::get($body);
+
+        if($response->isFailure()) {
+            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);
+        }
+        
+        return $response->data;
+    }
+
+    public function getAssetMarketChart(string $externalId, ?int $days = 90, ?string $currency = CurrencyConstants::BRL)
+    {
+        $body = [
+            'vs_currency' => $currency,
+            'days' => $days,
+            'interval' => 'daily'
+        ];
+
+        $response = GetAssetMarketChartRequest::get($externalId, $body);
 
         if($response->isFailure()) {
             $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);

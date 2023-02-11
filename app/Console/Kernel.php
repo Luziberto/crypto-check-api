@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use App\Jobs\UpdateAssetMarketJob;
+use App\Models\Asset;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Cache;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +18,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-       
+       $schedule->call(function () {
+          Cache::forever('check_market_asset_list', Asset::all()->pluck('external_id')->toArray());
+        })->daily();
+
+       $schedule->job(new UpdateAssetMarketJob)->everyMinute();
     }
 
     protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
