@@ -22,6 +22,7 @@ class AssetRepository implements AssetRepositoryInterface
     public function search(string $search, int $perPage, string $orderBy, string $direction): LengthAwarePaginator {
         return $this->entity
                 ->when($search, fn (Builder $query) => $query->where(DB::raw('lower(name)'),'LIKE', "%$search%"))
+                ->orderBy($orderBy, $direction)
                 ->paginate($perPage);
     }
     
@@ -78,10 +79,9 @@ class AssetRepository implements AssetRepositoryInterface
             return;
         }
         
-        logger($market);
         $asset->update(match ($currency) {
-            CurrencyConstants::BRL => ['market_90_days_brl' => $market],
-            CurrencyConstants::USD => ['market_90_days_usd' => $market]
+            CurrencyConstants::BRL => ['market_90_days_brl' => json_decode($market, true)],
+            CurrencyConstants::USD => ['market_90_days_usd' => json_decode($market, true)]
         });
     }
 }

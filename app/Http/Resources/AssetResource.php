@@ -23,11 +23,11 @@ class AssetResource extends JsonResource
             'market_cap' => [
                 'brl' => [
                     'current_price' => $this->price_brl ? currencyFormat($this->price_brl, CurrencyConstants::PT_BR_CURRENCY) : '0.00',
-                    'market_90_days_brl' => $this->market_90_days_brl
+                    'market_90_days' => $this->market_90_days_brl
                 ],
                 'usd' => [
                     'current_price' => $this->price_usd ? currencyFormat($this->price_usd, CurrencyConstants::EN_US_CURRENCY) : '0.00',
-                    'market_90_days_usd' => $this->market_90_days_usd
+                    'market_90_days' => $this->market_90_days_usd
                 ]
             ],
             'image' => $this->image_path,

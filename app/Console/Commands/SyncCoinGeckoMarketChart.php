@@ -30,7 +30,9 @@ class SyncCoinGeckoMarketChart extends Command
      */
     public function handle()
     {
-        Cache::forever('check_market_asset_list', Asset::all()->pluck('external_id')->toArray());
-        // UpdateAssetMarketJob::dispatch()->onQueue('market_cap');
+        if (!count(Cache::get('check_market_asset_list', []))) {
+            Cache::forever('check_market_asset_list', Asset::all()->pluck('external_id')->toArray());
+        }
+        UpdateAssetMarketJob::dispatch();
     }
 }

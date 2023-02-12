@@ -18,15 +18,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-       $schedule->call(function () {
-          Cache::forever('check_market_asset_list', Asset::all()->pluck('external_id')->toArray());
-        })->daily();
-
-       $schedule->job(new UpdateAssetMarketJob)->everyMinute();
     }
 
     protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
     {
+        $shortSchedule->command('sync:coin-gecko-market-chart')->everySecond(60);
+
         // this artisan command will run every second
         $shortSchedule->command('sync:assets-price')->everySecond(config('coingecko.sync_time'));
     }
