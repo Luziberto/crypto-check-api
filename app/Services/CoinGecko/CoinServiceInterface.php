@@ -6,8 +6,6 @@ use App\Constants\CurrencyConstants;
 
 interface CoinServiceInterface
 {
-    public function getAssetHistory($id, $params);
-
     public function getAssetsMarketList(array $assets);
 
     public function getSimplePrice(array $externalIds);

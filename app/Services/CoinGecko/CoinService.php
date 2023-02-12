@@ -6,12 +6,9 @@ use App\Constants\CoinBaseConstants;
 use App\Constants\CoingeckoConstants;
 use App\Constants\CurrencyConstants;
 use App\Exceptions\CoinGeckoHttpException;
-use App\Http\Libraries\CoinGecko\Asset\GetAssetHistoryRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetMarketChartRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetSimplePriceRequest;
-use App\Http\Libraries\CoinGecko\Asset\GetAssetsListRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetsMarketRequest;
-use App\Http\Libraries\CoinGecko\Asset\GetSpecificAssetsRequest;
 use App\Repositories\Asset\AssetRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
@@ -86,17 +83,6 @@ class CoinService implements CoinServiceInterface
             $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);
         }
         
-        return $response->data;
-    }
-
-    public function getAssetHistory($id, $date)
-    {
-        $response = GetAssetHistoryRequest::get($id, ['date' => $date]);
-        
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSET_HISTORY);
-        }
-
         return $response->data;
     }
 
