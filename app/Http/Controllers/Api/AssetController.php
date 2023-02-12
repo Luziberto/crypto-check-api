@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AssetIndexRequest;
 use App\Http\Resources\AssetIndexCollection;
 use App\Services\Asset\AssetServiceInterface;
-use App\Repositories\Asset\AssetRepositoryInterface;
 
 class AssetController extends Controller
 {

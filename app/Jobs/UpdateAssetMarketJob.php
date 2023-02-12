@@ -33,20 +33,23 @@ class UpdateAssetMarketJob implements ShouldQueue
      */
     public function handle(AssetServiceInterface $assetService, CoinServiceInterface $coinService)
     {
-        logger('UpdateAssetMarketJob');
         $externalIds = Cache::get('check_market_asset_list', []);
-        $assets = 5;
+        $qttAssets = 5;
+
+        if (count($externalIds) < $qttAssets) $qttAssets = count($externalIds);
+
         if (count($externalIds)) {
-            for ($i=1; $i <= $assets; $i++) {
+            for ($i=1; $i <= $qttAssets; $i++) {
                 $externalId = array_shift($externalIds);
-                logger('UpdateAssetMarketJob: '. $externalId);
-                
-                $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::BRL);
-                $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::BRL);
-                
-                $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::USD);
-                $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::USD);
-                sleep(3);
+                try {
+                    $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::BRL);
+                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::BRL);
+                    
+                    $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::USD);
+                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::USD);
+                } catch (\Throwable $th) {
+                    $externalId = array_unshift($externalIds);
+                }
             }
             Cache::forever('check_market_asset_list', $externalIds);
         }
