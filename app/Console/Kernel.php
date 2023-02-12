@@ -22,9 +22,10 @@ class Kernel extends ConsoleKernel
 
     protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
     {
-        $shortSchedule->command('sync:coin-gecko-market-chart')->everySecond(60);
+        $shortSchedule->command('fill:assets-cache')->everySecond(86400);
 
-        // this artisan command will run every second
+        $shortSchedule->command('sync:coin-gecko-market-chart')->everySecond(60);
+        
         $shortSchedule->command('sync:assets-price')->everySecond(config('coingecko.sync_time'));
     }
     /**

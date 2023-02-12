@@ -2,24 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\UpdateAssetMarketJob;
+use App\Models\Asset;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
-class SyncCoinGeckoMarketChart extends Command
+class FillAssetCacheCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sync:coin-gecko-market-chart';
+    protected $signature = 'fill:assets-cache';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Get market cap by crypto coin';
+    protected $description = 'Fill assets cache according to assets table';
 
     /**
      * Execute the console command.
@@ -28,6 +29,6 @@ class SyncCoinGeckoMarketChart extends Command
      */
     public function handle()
     {
-        UpdateAssetMarketJob::dispatch();
+        Cache::forever('check_market_asset_list', Asset::all()->pluck('external_id')->toArray());
     }
 }
