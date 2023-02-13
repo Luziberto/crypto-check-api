@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Http\Resources\AssetResource;
+use App\Http\Resources\AssetWebsocketResource;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -52,6 +52,6 @@ class CryptoUpdated implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['asset' => new AssetResource($this->asset)];
+        return ['asset' => new AssetWebsocketResource($this->asset)];
     }
 }
