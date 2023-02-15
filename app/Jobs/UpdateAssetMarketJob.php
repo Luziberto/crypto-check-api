@@ -37,18 +37,17 @@ class UpdateAssetMarketJob implements ShouldQueue
         $qttAssets = 5;
 
         if (count($externalIds) < $qttAssets) $qttAssets = count($externalIds);
-
         if (count($externalIds)) {
             for ($i=1; $i <= $qttAssets; $i++) {
                 $externalId = array_shift($externalIds);
                 try {
                     $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::BRL);
-                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::BRL);
+                    $assetService->syncMarketChartByExtId($externalId, json_decode($market, true), CurrencyConstants::BRL);
                     
                     $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::USD);
-                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::USD);
+                    $assetService->syncMarketChartByExtId($externalId, json_decode($market, true), CurrencyConstants::USD);
                 } catch (\Throwable $th) {
-                    $externalId = array_unshift($externalIds);
+                    array_unshift($externalIds, $externalId);
                 }
             }
             Cache::forever('check_market_asset_list', $externalIds);

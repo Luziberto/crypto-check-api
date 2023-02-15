@@ -5,12 +5,11 @@ namespace App\Services\CoinGecko;
 use App\Constants\CoinBaseConstants;
 use App\Constants\CoingeckoConstants;
 use App\Constants\CurrencyConstants;
-use App\Exceptions\CoinGeckoHttpException;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetMarketChartRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetSimplePriceRequest;
 use App\Http\Libraries\CoinGecko\Asset\GetAssetsMarketRequest;
 use App\Repositories\Asset\AssetRepositoryInterface;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\RequestException;
 
 class CoinService implements CoinServiceInterface
 {
@@ -29,25 +28,24 @@ class CoinService implements CoinServiceInterface
             'include_24hr_change' => 'true'
         ];
 
-        $response = GetAssetSimplePriceRequest::get($params);
-        
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_SIMPLE_PRICE);
+        try {
+            $response = GetAssetSimplePriceRequest::get($params)->json();
+            
+            $data = [];
+            foreach ($response as $id => $value) {
+                $data[] = [
+                    'external_id' => $id,
+                    'price_usd'                   => $value[CurrencyConstants::USD],
+                    'price_brl'                   => $value[CurrencyConstants::BRL],
+                    'coin_base'                   => CoinBaseConstants::COIN_GECKO,
+                    'price_change_percentage_24h' => $value['brl_24h_change']
+                ];
+            }
+
+            return $data;
+        } catch(RequestException $e) {
+            throw $e;
         }
-
-        $data = [];
-
-        foreach ($response->data as $id => $value) {
-            $data[] = [
-                'external_id' => $id,
-                'price_usd'                   => $value[CurrencyConstants::USD],
-                'price_brl'                   => $value[CurrencyConstants::BRL],
-                'coin_base'                   => CoinBaseConstants::COIN_GECKO,
-                'price_change_percentage_24h' => $value['brl_24h_change']
-            ];
-        }
-
-        return $data;
     }
 
     public function getAssetsMarketList(?array $externalIds = [], ?int $page = 1, ?string $order = 'market_cap_desc')
@@ -60,13 +58,9 @@ class CoinService implements CoinServiceInterface
             'order' => $order
         ];
 
-        $response = GetAssetsMarketRequest::get($body);
-
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);
-        }
+        $response = GetAssetsMarketRequest::get($body)->json();
         
-        return $response->data;
+        return $response;
     }
 
     public function getAssetMarketChart(string $externalId, ?int $days = 90, ?string $currency = CurrencyConstants::BRL)
@@ -77,21 +71,8 @@ class CoinService implements CoinServiceInterface
             'interval' => 'daily'
         ];
 
-        $response = GetAssetMarketChartRequest::get($externalId, $body);
-
-        if($response->isFailure()) {
-            $this->handleError($response, CoingeckoConstants::COIN_GECKO_SERVICE_GET_ENDPOINT_TO_GET_ASSETS_MARKET);
-        }
+        $response = GetAssetMarketChartRequest::get($externalId, $body)->json();
         
-        return $response->data;
-    }
-
-    private function handleError($response, $coinGeckoErrorOrigin)
-    {
-        $errorCode = $response->data['message']['codeAsString'] ?? null;
-        $errorMessage = CoingeckoConstants::getErrorMessage($errorCode);
-
-        Log::error("[$coinGeckoErrorOrigin] - " . json_encode($errorMessage));
-        throw new CoinGeckoHttpException($errorMessage);
+        return $response;
     }
 }

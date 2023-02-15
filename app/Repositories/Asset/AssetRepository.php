@@ -3,6 +3,7 @@
 namespace App\Repositories\Asset;
 
 use App\Constants\CurrencyConstants;
+use App\Events\CryptoUpdated;
 use App\Models\Asset;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -61,15 +62,29 @@ class AssetRepository implements AssetRepositoryInterface
             $priceUsd = number_format($coin['price_usd'], 12, '.', '');
             $priceBrl = number_format($coin['price_brl'], 12, '.', '');
             
-            $asset->update([
-                'price_usd' => $priceUsd,
-                'price_brl' => $priceBrl,
-                'price_change_percentage_24h' => $coin['price_change_percentage_24h']
-            ]);
+            $asset->price_brl = $priceBrl;
+            $asset->price_usd = $priceUsd;
+            $asset->price_change_percentage_24h = $coin['price_change_percentage_24h'];
+
+            if ($this->someFieldIsDirty($asset, [
+                'price_brl',
+                'price_usd',
+                'price_change_percentage_24h'
+            ])) CryptoUpdated::dispatch($asset);
+
+            $asset->save();
         }
     }
     
-    public function updateMarketChart(string $externalId, string $market, string $currency)
+    private function someFieldIsDirty(Asset $asset, array $attributes): bool {
+        $isDirty = false;
+        foreach ($attributes as $attribute) {
+            if ($asset->isDirty($attribute)) $isDirty = true;
+        }
+        return $isDirty;
+    }
+
+    public function updateMarketChart(string $externalId, array $market, string $currency)
     {
         $asset = $this->entity->where('external_id', $externalId)
                     ->first();
@@ -80,8 +95,8 @@ class AssetRepository implements AssetRepositoryInterface
         }
         
         $asset->update(match ($currency) {
-            CurrencyConstants::BRL => ['market_90_days_brl' => json_decode($market, true)],
-            CurrencyConstants::USD => ['market_90_days_usd' => json_decode($market, true)]
+            CurrencyConstants::BRL => ['market_90_days_brl' => $market],
+            CurrencyConstants::USD => ['market_90_days_usd' => $market]
         });
     }
 }

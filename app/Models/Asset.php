@@ -17,10 +17,6 @@ class Asset extends Model
         'market_90_days_usd' => 'array'
     ];
 
-    protected $dispatchesEvents = [
-        'updated' => CryptoUpdated::class
-    ];
-
     protected $fillable = [
         'name',
         'slug',

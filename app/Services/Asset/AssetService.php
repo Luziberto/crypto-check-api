@@ -28,7 +28,7 @@ class AssetService implements AssetServiceInterface
         $this->assetRepository->syncByExternalIds($assets);
     }
 
-    public function syncMarketChartByExtId(string $externalId, string $market, ?string $currency = CurrencyConstants::BRL)
+    public function syncMarketChartByExtId(string $externalId, array $market, ?string $currency = CurrencyConstants::BRL)
     {
         $this->assetRepository->updateMarketChart($externalId, $market, $currency);
     }

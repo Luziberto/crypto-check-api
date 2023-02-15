@@ -13,7 +13,7 @@ interface AssetRepositoryInterface
 
     public function getAllExternalId();
 
-    public function updateMarketChart(string $externalId, string $market, string $currency);
+    public function updateMarketChart(string $externalId, array $market, string $currency);
 
     public function getByUuid(string $uuid);
 
