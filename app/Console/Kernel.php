@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
 
     protected function shortSchedule(\Spatie\ShortSchedule\shortSchedule $shortSchedule)
     {
-        $shortSchedule->command('fill:assets-cache')->everySecond(86400);
+        $shortSchedule->command('sync:assets-cache')->everySecond(86400);
 
         $shortSchedule->command('sync:coin-gecko-market-chart')->everySecond(60);
         

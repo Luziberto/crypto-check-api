@@ -13,7 +13,7 @@ class FillAssetCacheCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'fill:assets-cache';
+    protected $signature = 'sync:assets-cache';
 
     /**
      * The console command description.
