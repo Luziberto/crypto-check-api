@@ -1,7 +1,7 @@
 FROM php:8.0-fpm
 
 # Arguments defined in docker-compose.yml
-ARG user=dacxi
+ARG user=user
 ARG uid=1000
 
 # Install system dependencies
@@ -31,14 +31,9 @@ RUN docker-php-ext-configure gd --with-jpeg
 
 # Common PHP Extensions
 RUN docker-php-ext-install \
-    bz2 \
     intl \
     iconv \
-    bcmath \
-    opcache \
-    calendar \
-    pdo_mysql \
-    gd
+    pdo_mysql
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
 #ADD ./docker/php/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
