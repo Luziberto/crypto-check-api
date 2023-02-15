@@ -6,7 +6,7 @@ use App\Models\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
-class FillAssetCacheCommand extends Command
+class SyncAssetCacheCommand extends Command
 {
     /**
      * The name and signature of the console command.

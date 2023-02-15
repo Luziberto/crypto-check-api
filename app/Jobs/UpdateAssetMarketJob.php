@@ -42,10 +42,10 @@ class UpdateAssetMarketJob implements ShouldQueue
                 $externalId = array_shift($externalIds);
                 try {
                     $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::BRL);
-                    $assetService->syncMarketChartByExtId($externalId, json_decode($market, true), CurrencyConstants::BRL);
+                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::BRL);
                     
                     $market = $coinService->getAssetMarketChart(externalId: $externalId, currency: CurrencyConstants::USD);
-                    $assetService->syncMarketChartByExtId($externalId, json_decode($market, true), CurrencyConstants::USD);
+                    $assetService->syncMarketChartByExtId($externalId, $market, CurrencyConstants::USD);
                 } catch (\Throwable $th) {
                     array_unshift($externalIds, $externalId);
                 }
