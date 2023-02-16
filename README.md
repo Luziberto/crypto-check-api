@@ -43,6 +43,17 @@ Then
 $ Create your .env file (use .env.example as model)
 $ Run php artisan migrate
 $ Run php artisan key:generate
+$ Run php artisan sync:coin-gecko-assets
+```
+
+To sync assets in coingecko platform
+```sh
+$ php artisan short-schedule:run
+```
+
+To run the websocket server
+```sh
+$ php artisan websockets:serve
 ```
 
 
