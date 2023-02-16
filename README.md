@@ -29,13 +29,13 @@ To run the project follow these steps:
 With docker (without requirements but Docker)
 
 ```sh
-$ run docker-compose up -d (default port is 8000)
-$ run docker-compose exec php bash
+$ Run docker-compose up -d (default port is 8000)
+$ Run docker-compose exec php bash
 ```
 
 Without docker but with all requirements installed previously
 ```sh
-$ php artisan serve (default port is 8000)
+$ Run php artisan serve (default port is 8000)
 ```
 
 Then
@@ -48,12 +48,12 @@ $ Run php artisan sync:coin-gecko-assets
 
 To sync assets in coingecko platform
 ```sh
-$ php artisan short-schedule:run
+$ Run php artisan short-schedule:run
 ```
 
 To run the websocket server
 ```sh
-$ php artisan websockets:serve
+$ Run php artisan websockets:serve
 ```
 
 
