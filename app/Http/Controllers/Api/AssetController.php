@@ -20,8 +20,8 @@ class AssetController extends Controller
         $assets = $this->assetService->search(
             search: $request->get('search') ?? '',
             perPage: $request->get('per_page') ?? '',
-            orderBy: $request->get('orderBy') ?? 'price_change_percentage_24h',
-            direction: $request->get('direction') ?? 'desc'
+            orderBy: $request->get('orderBy') ?? 'id',
+            direction: $request->get('direction') ?? 'asc'
         );    
 
         return response()->json(AssetIndexCollection::make($assets), 200);
