@@ -7,6 +7,7 @@ This is the backend for the `Crypto check` website.
 
 - :rocket: `Php 8.0.x`
 - :hammer: `Composer 2.x.x`
+- :recycle: `Mysql 8.x.x or similar`
 
 ## Stack
 
