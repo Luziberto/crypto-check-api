@@ -4,7 +4,7 @@
 
 This is the backend for the `Crypto check` website.
 
- <a href="https://cryptocheck-api.luzibertomendes.dev.br">Live Demo</a>
+ <a href="https://cryptocheck.luzibertomendes.dev.br">Live Demo</a>
  
 ## Requirements
 
